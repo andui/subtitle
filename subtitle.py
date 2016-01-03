@@ -27,7 +27,7 @@ def main(srtFile, cutFile, folder):
     start = []
     end = []
 
-    lines = [line.rstrip('\n') for line in open(cutFile)]
+    lines = [line.rstrip('\n') for line in open(folder+cutFile)]
     pattern = re.compile("^(\d+\.)")
     lineNum = 0
     for line in lines:
@@ -43,7 +43,7 @@ def main(srtFile, cutFile, folder):
             end.append(str2Dt(strs[2]))
 
     # now read the srt file and out put the cutSrt
-    subs = pysrt.open(srtFile)
+    subs = pysrt.open(folder+srtFile)
     res = subs
 
     for i in range(len(start)):
