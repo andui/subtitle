@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 import re
 import pysrt
@@ -20,8 +21,8 @@ def shift(part, delta, factor):
     part.shift(seconds=delta.second * factor)
     part.shift(milliseconds=delta.microsecond / 1000 * factor)
 
-def main(srtFile, cutFile):
-    dest = srtFile[:-4] + "_cut.srt"
+def main(srtFile, cutFile, folder):
+    dest =srtFile[:-4] + "_cut.srt"
     # read from the cut file to get a list of [start, end]
     start = []
     end = []
@@ -64,7 +65,8 @@ def main(srtFile, cutFile):
     # adjust according to the diff between original video and srt
     shift(res, diff, factor)
 
-    # adjest according to length of piantou
-
-    res.save(dest, encoding='utf-8')
+    # #remove srtFile and cutFile
+    # os.remove(folder + srtFile)
+    # os.remove(folder + cutFile)
+    res.save(folder + dest, encoding='utf-8')
     return dest

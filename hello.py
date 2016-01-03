@@ -1,4 +1,3 @@
-import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug import secure_filename
 
@@ -31,22 +30,27 @@ def upload():
 		files = []
 		files.append(request.files['srt'])
 		files.append(request.files['cut'])
+		srtFile = None
+		cutFile = None
 		for i in range(len(files)):
 			file = files[i]
 			if file and allowed_file(file.filename, i):
 				print file.filename
 				filename = secure_filename(file.filename)
-				file.save(filename)
+				file.save(UPLOAD_FOLDER + filename)
 				if ext(filename)=='srt':
 					srtFile = filename
 				else:
-					cutFile = filename  
-        dest = subtitle.main(srtFile,cutFile)
+					cutFile = filename
+		if not cutFile or not srtFile:
+			return "invalid input file"
+        dest = subtitle.main(srtFile, cutFile, UPLOAD_FOLDER)
         return redirect(url_for('uploaded_file', filename=dest))
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+	return send_from_directory(UPLOAD_FOLDER, filename)
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
